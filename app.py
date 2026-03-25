@@ -32,7 +32,9 @@ def alumnos():
     if request.method=='POST':
         alum=Alumnos(nombre=create_form.nombre.data,
                      apaterno=create_form.apaterno.data,
-                     email=create_form.email.data)
+                     amaterno=create_form.amaterno.data,
+                     edad=create_form.edad.data,
+                     correo=create_form.correo.data)
         db.session.add(alum)
         db.session.commit()
         return redirect(url_for('index'))
@@ -48,7 +50,9 @@ def modificar():
          create_form.id.data=request.args.get('id')
          create_form.nombre.data=alum1.nombre
          create_form.apaterno.data=alum1.apaterno
-         create_form.email.data=alum1.email
+         create_form.amaterno.data=alum1.amaterno
+         create_form.edad.data=alum1.edad
+         create_form.correo.data=alum1.correo
     
     if request.method=='POST':
         id=request.args.get('id')
@@ -57,7 +61,9 @@ def modificar():
         alum1.id=id
         alum1.nombre=create_form.nombre.data
         alum1.apaterno=create_form.apaterno.data
-        alum1.email=create_form.email.data
+        alum1.amaterno=create_form.amaterno.data
+        alum1.edad=create_form.edad.data
+        alum1.correo=create_form.correo.data
         db.session.add(alum1)
         db.session.commit()
         return redirect(url_for('index'))
@@ -65,7 +71,7 @@ def modificar():
 
 @app.route('/eliminar',methods=['GET','POST'])
 def eliminar():
-    create_form=forms.UserForm2(request.form)
+    create_form=forms.UserForm(request.form)
     if request.method=='GET':
          id=request.args.get('id')
          #  select * from alumnos where id == id
@@ -73,10 +79,12 @@ def eliminar():
          create_form.id.data=request.args.get('id')
          create_form.nombre.data=alum1.nombre
          create_form.apaterno.data=alum1.apaterno
-         create_form.email.data=alum1.email
+         create_form.amaterno.data=alum1.amaterno
+         create_form.edad.data=alum1.edad    
+         create_form.correo.data=alum1.correo
     if request.method=='POST':
-         id=create_form.id.data
-         alum = Alumnos.query.get(id)
+         id=request.form.get('id')
+         alum = Alumnos.query.get_or_404(id)
          #delete from alumnos where id=id
          db.session.delete(alum) 
          db.session.commit()
@@ -93,10 +101,12 @@ def detalles():
          id=request.args.get('id')
          nombre=alum1.nombre
          apaterno=alum1.apaterno
-         email=alum1.email
+         amaterno=alum1.amaterno
+         edad=alum1.edad     
+         correo=alum1.correo
          
     return render_template('detalles.html',id=id,nombre=nombre,apaterno=apaterno,
-                           email=email)
+                           amaterno=amaterno,edad=edad,correo=correo)
 
 
 
